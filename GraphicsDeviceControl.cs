@@ -18,6 +18,8 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using System.Collections.Generic;
+using XKeys = Microsoft.Xna.Framework.Input.Keys;
 
 #endregion
 
@@ -36,6 +38,7 @@ namespace CleanTileEditor
             }
         }
 
+        private Stopwatch sw;
         private SwapChainRenderTarget _chain;
         private GraphicsDeviceService _graphicsDeviceService;
         private Microsoft.Xna.Framework.Color _clearColor;
@@ -52,13 +55,21 @@ namespace CleanTileEditor
                 _clearColor = new Microsoft.Xna.Framework.Color(value.R, value.G, value.B, value.A);
             }
         }
+        //Read only access to frames per second.
+        public string fps { get; private set; }
 
         public bool AutoDraw { get; set; } = true;
+        private bool isResized { get; set; } = false;
 
         protected override void OnCreateControl()
         {
+            sw = new Stopwatch();
+            _keys = new List<Microsoft.Xna.Framework.Input.Keys>();
+
             if (!designMode)
             {
+                SizeChanged += GraphicsDeviceControl_SizeChanged; //If resizing the form this will fire, updating to our new size.
+
                 _graphicsDeviceService = GraphicsDeviceService.AddRef(Handle, ClientSize.Width, ClientSize.Height);
 
                 _chain = new SwapChainRenderTarget(_graphicsDeviceService.GraphicsDevice, Handle, ClientSize.Width,
@@ -66,12 +77,27 @@ namespace CleanTileEditor
 
                 Services.AddService<IGraphicsDeviceService>(_graphicsDeviceService);
 
-                Initialize?.Invoke(); // Invoke after graphics device service is instantiated AND after services is created.
+                Initialize?.Invoke(); // Gives us an Initialize Method: Invoked after graphics device service is instantiated AND after services is created.
+
+                LoadContent?.Invoke(); // Gives us a LoadContent Method
 
                 if (AutoDraw)
-                    Application.Idle += delegate { Invalidate(); };
+                    //Gives us an Update() loop
+                    Application.Idle += delegate { InsideUpdate(); };
             }
             base.OnCreateControl();
+        }
+
+        private void InsideUpdate()
+        {
+            Update?.Invoke(); //Gives us an Update Method
+
+            //Update FPS
+            double milliseconds = FPS.ComputeTimeSlice(sw);
+            FPS.Accumulate(milliseconds);
+
+            //Invalidate to flag this control as needing updating.
+            Invalidate();
         }
 
         protected override void Dispose(bool disposing)
@@ -82,6 +108,12 @@ namespace CleanTileEditor
                 _graphicsDeviceService = null;
             }
             base.Dispose(disposing);
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            isResized = true;
+            base.OnResize(e);
         }
 
         private string BeginDraw()
@@ -105,6 +137,11 @@ namespace CleanTileEditor
                 MaxDepth = 1
             };
 
+            if (isResized)
+            {
+                Resized();
+            }
+
             if (GraphicsDevice.Viewport.Equals(viewport) == false)
                 GraphicsDevice.Viewport = viewport;
 
@@ -112,6 +149,13 @@ namespace CleanTileEditor
 
             return null;
         }
+        private void Resized()
+        {
+            _chain = new SwapChainRenderTarget(_graphicsDeviceService.GraphicsDevice, Handle, ClientSize.Width,
+                ClientSize.Height);
+            isResized = false;
+        }
+
 
         private string HandleDeviceReset()
         {
@@ -146,6 +190,8 @@ namespace CleanTileEditor
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            InputManager.SetKeys(_keys); //
+
             var beginDrawError = BeginDraw();
             if (string.IsNullOrEmpty(beginDrawError))
             {
@@ -178,8 +224,46 @@ namespace CleanTileEditor
         {
         }
 
+        private void GraphicsDeviceControl_SizeChanged(object sender, EventArgs e)
+        {
+            // If we have a reference to the GraphicsDeviceService, we must reset it based on our updated size
+            if (_graphicsDeviceService != null)
+                _graphicsDeviceService.ResetDevice(ClientSize.Width, ClientSize.Height);
+        }
+
+        #region Input
+
+        private const int WM_KEYDOWN = 0x100;
+        private const int WM_KEYUP = 0x101;
+
+        private List<Microsoft.Xna.Framework.Input.Keys> _keys;
+
+        // We would like to just override ProcessKeyMessage, but our control would only intercept it
+        // if it had explicit focus.  Focus is a messy issue, so instead we're going to let the parent
+        // form override ProcessKeyMessage instead, and pass it along to this method.
+
+        internal new void ProcessKeyMessage(ref Message m)
+        {
+            if (m.Msg == WM_KEYDOWN)
+            {
+                XKeys xkey = KeyboardUtil.ToXna((Keys)m.WParam);
+                if (!_keys.Contains(xkey))
+                    _keys.Add(xkey);
+            }
+            else if (m.Msg == WM_KEYUP)
+            {
+                Microsoft.Xna.Framework.Input.Keys xnaKey = KeyboardUtil.ToXna((Keys)m.WParam);
+                if (_keys.Contains(xnaKey))
+                    _keys.Remove(xnaKey);
+            }
+        }
+
+        #endregion
+
         public delegate void NullEventArgs();
-        public event NullEventArgs Draw;
         public event NullEventArgs Initialize;
+        public event NullEventArgs LoadContent;
+        public new event NullEventArgs Update;
+        public event NullEventArgs Draw;
     }
 }

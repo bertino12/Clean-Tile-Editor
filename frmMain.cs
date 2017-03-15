@@ -38,31 +38,46 @@ namespace CleanTileEditor
             get { return tileDisplay1.Services; }
         }
 
+        #region Constructor/Initialization
         public frmMain()
         {
             InitializeComponent();
 
             tileDisplay1.Initialize += TileDisplay1_Initialize;
+            tileDisplay1.LoadContent += TileDisplay1_LoadContent;
+            tileDisplay1.Update += TileDisplay1_Update;
             tileDisplay1.Draw += TileDisplay1_Draw;
+            tileDisplay1.Resize += TileDisplay1_Resize;
         }
+        private void frmMain_Shown(object sender, EventArgs e) {
 
-        private void TileDisplay1_Initialize()
-        {
+        }
+        private void TileDisplay1_Initialize() {
             content = new ContentManager(services, "Content");
             spriteBatch = new SpriteBatch(graphicsDevice);
 
-            Texture2D texture;
+            //Texture2D texture;
 
-            texture = content.Load<Texture2D>("dirt");
-            tileTextures.Add(texture);
+            //texture = content.Load<Texture2D>("dirt");
+            //tileTextures.Add(texture);
 
-            texture = content.Load<Texture2D>("grass");
-            tileTextures.Add(texture);
+            //texture = content.Load<Texture2D>("grass");
+            //tileTextures.Add(texture);
 
-            texture = content.Load<Texture2D>("rock");
-            tileTextures.Add(texture);
+            //texture = content.Load<Texture2D>("rock");
+            //tileTextures.Add(texture);
+
+            InputManager.Initialize();
         }
+        #endregion
 
+        private void TileDisplay1_LoadContent()
+        { }
+        private void TileDisplay1_Update() {
+            fpsLabel.Text = FPS.fps;
+            InputManager.Update();
+            TileEngine.Update();
+        }
         private void TileDisplay1_Draw()
         {
             graphicsDevice.Clear(Color.CornflowerBlue);
@@ -87,5 +102,19 @@ namespace CleanTileEditor
 
             spriteBatch.End();
         }
+
+
+        #region Form events
+        private void TileDisplay1_Resize(object sender, EventArgs e)
+        { }
+        #endregion
+
+        #region Misc Helpers    
+        protected override bool ProcessKeyPreview(ref Message m)
+        {
+            tileDisplay1.ProcessKeyMessage(ref m);
+            return base.ProcessKeyPreview(ref m);
+        }
+        #endregion
     }
 }
