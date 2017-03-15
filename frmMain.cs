@@ -56,16 +56,17 @@ namespace CleanTileEditor
             content = new ContentManager(services, "Content");
             spriteBatch = new SpriteBatch(graphicsDevice);
 
-            //Texture2D texture;
+            //Be sure to add your textures and name them as below or the demo will not work.
+            Texture2D texture;
 
-            //texture = content.Load<Texture2D>("dirt");
-            //tileTextures.Add(texture);
+            texture = content.Load<Texture2D>("dirt");
+            tileTextures.Add(texture);
 
-            //texture = content.Load<Texture2D>("grass");
-            //tileTextures.Add(texture);
+            texture = content.Load<Texture2D>("grass");
+            tileTextures.Add(texture);
 
-            //texture = content.Load<Texture2D>("rock");
-            //tileTextures.Add(texture);
+            texture = content.Load<Texture2D>("rock");
+            tileTextures.Add(texture);
 
             InputManager.Initialize();
         }
