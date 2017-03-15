@@ -32,21 +32,18 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.splitter1 = new System.Windows.Forms.Splitter();
+            this.layersCheckedListBox = new System.Windows.Forms.CheckedListBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.wireFrameCheckBox = new System.Windows.Forms.CheckBox();
             this.deleteLayerButton = new System.Windows.Forms.Button();
             this.addLayerButton = new System.Windows.Forms.Button();
             this.fpsLabel = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.resetLayerButton = new System.Windows.Forms.Button();
-            this.randomizeDataButton = new System.Windows.Forms.Button();
-            this.layersCheckedListBox = new System.Windows.Forms.CheckedListBox();
+            this.splitter1 = new System.Windows.Forms.Splitter();
             this.tileDisplay1 = new CleanTileEditor.TileDisplay();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -84,14 +81,22 @@
             this.panel1.Size = new System.Drawing.Size(290, 587);
             this.panel1.TabIndex = 5;
             // 
-            // splitter1
+            // layersCheckedListBox
             // 
-            this.splitter1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.splitter1.Location = new System.Drawing.Point(1077, 24);
-            this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(3, 587);
-            this.splitter1.TabIndex = 6;
-            this.splitter1.TabStop = false;
+            this.layersCheckedListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.layersCheckedListBox.FormattingEnabled = true;
+            this.layersCheckedListBox.Location = new System.Drawing.Point(0, 68);
+            this.layersCheckedListBox.Name = "layersCheckedListBox";
+            this.layersCheckedListBox.Size = new System.Drawing.Size(290, 374);
+            this.layersCheckedListBox.TabIndex = 10;
+            // 
+            // panel2
+            // 
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(0, 442);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(290, 145);
+            this.panel2.TabIndex = 9;
             // 
             // panel3
             // 
@@ -146,42 +151,14 @@
             this.fpsLabel.TabIndex = 4;
             this.fpsLabel.Text = "FPS: 0";
             // 
-            // panel2
+            // splitter1
             // 
-            this.panel2.Controls.Add(this.resetLayerButton);
-            this.panel2.Controls.Add(this.randomizeDataButton);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 442);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(290, 145);
-            this.panel2.TabIndex = 9;
-            // 
-            // resetLayerButton
-            // 
-            this.resetLayerButton.Location = new System.Drawing.Point(154, 9);
-            this.resetLayerButton.Name = "resetLayerButton";
-            this.resetLayerButton.Size = new System.Drawing.Size(110, 23);
-            this.resetLayerButton.TabIndex = 8;
-            this.resetLayerButton.Text = "Reset Layer -1";
-            this.resetLayerButton.UseVisualStyleBackColor = true;
-            // 
-            // randomizeDataButton
-            // 
-            this.randomizeDataButton.Location = new System.Drawing.Point(28, 9);
-            this.randomizeDataButton.Name = "randomizeDataButton";
-            this.randomizeDataButton.Size = new System.Drawing.Size(110, 23);
-            this.randomizeDataButton.TabIndex = 7;
-            this.randomizeDataButton.Text = "Randomize Layer";
-            this.randomizeDataButton.UseVisualStyleBackColor = true;
-            // 
-            // layersCheckedListBox
-            // 
-            this.layersCheckedListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.layersCheckedListBox.FormattingEnabled = true;
-            this.layersCheckedListBox.Location = new System.Drawing.Point(0, 68);
-            this.layersCheckedListBox.Name = "layersCheckedListBox";
-            this.layersCheckedListBox.Size = new System.Drawing.Size(290, 374);
-            this.layersCheckedListBox.TabIndex = 10;
+            this.splitter1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.splitter1.Location = new System.Drawing.Point(1077, 24);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(3, 587);
+            this.splitter1.TabIndex = 6;
+            this.splitter1.TabStop = false;
             // 
             // tileDisplay1
             // 
@@ -216,7 +193,6 @@
             this.panel1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
-            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -230,8 +206,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.CheckedListBox layersCheckedListBox;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button resetLayerButton;
-        private System.Windows.Forms.Button randomizeDataButton;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.CheckBox wireFrameCheckBox;
         private System.Windows.Forms.Button deleteLayerButton;
